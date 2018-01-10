@@ -1,0 +1,533 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<title>Test Drosophila brain demo</title>
+		<style>
+			html, body {
+				height: 100%;
+			}
+
+			body {
+				background-color: #000000;
+				margin: 0;
+				font-family: Arial;
+				overflow: hidden;
+			}
+
+			a {
+				color: #ffffff;
+			}
+
+			#menu {
+				position: absolute;
+				bottom: 20px;
+				left: 20px;
+				width: 100%;
+				text-align: left;
+
+			}
+
+			button {
+				color: rgba(0,255,255,0.75);
+				background: transparent;
+				outline: 1px solid rgba(0,255,255,0.75);
+				border: 0px;
+				padding: 5px 10px;
+				cursor: pointer;
+			}
+			button:hover,input.button:hover {
+				background-color: rgba(0,255,255,0.5);
+			}
+			button:active,input.button:active {
+				color: #000000;
+				background-color: rgba(0,255,255,0.75);
+			}
+
+			div.file-box{
+				position:relative;
+				width: 35px;
+				height: 100%;
+				border: 0px;
+				padding: 5px 10px;
+				display:inline-block;
+				cursor: pointer;
+			}
+
+			div.upfile-box{
+				position:relative;
+				width: 45px;
+				height: 100%;
+				border: 0px;
+				padding: 5px 10px;
+				display:inline-block;
+				cursor: pointer;
+			}
+			
+			input.button{
+				position:absolute;
+				top:-7px;
+				left:0px;
+				border: 0px;
+				width:100%;
+				height: 25px;
+				color: rgba(0,255,255,0.75);
+				background: transparent;
+				outline: 1px solid rgba(0,255,255,0.75);
+				cursor: pointer;
+			}
+
+			input.file{
+				position:absolute;
+				top:-7px;
+				left:0px;
+				height: 25px;
+				border: 0px;
+				filter:alpha(opacity:0);
+				opacity:0;
+				width:100%;
+				cursor: pointer;
+			}
+		</style>
+
+		<script type="x-shader/x-vertex" id="somavertexshader">
+			attribute float neuron_id;
+
+			uniform float fancy;
+			uniform float highlight_id;
+			uniform float size;
+			uniform float totalNeuron;
+
+			struct PointLight {
+			    vec3 position;
+				vec3 color;
+				float distance;
+				float decay;
+				int shadow;
+				float shadowBias;
+				float shadowRadius;
+				vec2 shadowMapSize;
+			};
+			uniform PointLight pointLights[NUM_POINT_LIGHTS];
+
+			varying float vOpacity;
+			varying vec3 vertex_light_vector;
+			varying vec3 vertex_normal;
+			varying vec3 vPosition;
+			void main() {
+
+				if(fancy == 1.0 && highlight_id == 0.0) {
+					if(totalNeuron<=1.0)
+			       		vOpacity = 0.9;
+			       	else vOpacity = 1.4 * pow(abs(1.0/totalNeuron),0.3);
+				}
+				else if(highlight_id != 0.0 && neuron_id != highlight_id) vOpacity = 0.1;
+				else vOpacity = 1.0;
+
+				vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+				gl_PointSize = size * ( 300.0 / -mvPosition.z );
+				gl_Position = projectionMatrix * mvPosition;
+
+				vec3 light_position = (pointLights[0].position).xyz;
+				vertex_light_vector = normalize(light_position.xyz - mvPosition.xyz);
+				vertex_normal = vec3(0,0,1.0);
+				vPosition = mvPosition.xyz;
+			}
+		</script>
+
+		<script type="x-shader/x-fragment" id="somafragmentshader">
+			uniform vec3 color;
+			uniform sampler2D texture;
+			uniform float opacity;
+			uniform float texture_map;
+			uniform sampler2D height_map;
+
+			struct PointLight {
+			    vec3 position;
+				vec3 color;
+				float distance;
+				float decay;
+				int shadow;
+				float shadowBias;
+				float shadowRadius;
+				vec2 shadowMapSize;
+			};
+			uniform PointLight pointLights[NUM_POINT_LIGHTS];
+
+			varying float vOpacity;
+			varying vec3 vertex_light_vector;
+			varying vec3 vertex_normal;
+			varying vec3 vPosition;
+
+			void main() {
+
+				gl_FragColor = vec4( color , opacity * vOpacity );
+
+				vec4 texCol = texture2D( texture, gl_PointCoord );
+				if(texCol.a <= 0.5) discard;
+				else gl_FragColor = gl_FragColor * texCol.a;
+
+				const vec3 eye_position = vec3(0.0,0.0,0.0);
+				/*if(texture_map == 1.){
+					// Extract the normal from the normal map
+					vec3 normal = normalize(texture2D(height_map, gl_PointCoord).rgb * 2.0 - 1.0);
+					vec3 light_pos = normalize(pointLights[0].position);
+					// Calculate the lighting diffuse value
+					float diffuse = max(dot(normal, light_pos), 0.0);
+
+					vec3 E = normalize(vec3(eye_position - vPosition));
+					vec3 R = normalize(vec3(reflect(-light_pos, normal)));
+
+					// Defining The Material Colors
+					vec4 AmbientColor = vec4(color.xyz/6.0, 1.0);
+					vec4 DiffuseColor = vec4(color.xyz,1.0);
+					vec4 SpecularColor = vec4(color.xyz, 1.0);
+
+					// Calculate the ambient term
+					vec4 ambient_color = AmbientColor;
+
+					// Calculate the diffuse term
+					vec4 diffuse_color = DiffuseColor;
+					// Set the diffuse value (darkness). This is done with a dot product between the normal and the light
+					// and the maths behind it is explained in the maths section of the site.
+					float diffuse_value = max(dot(normalize(vertex_normal), vertex_light_vector), 0.0);
+
+					// Calculate the specular value
+					vec4 specular_color = SpecularColor * pow(max(dot(E, R), 0.0) , 64.0);
+
+					vec3 color = ambient_color.xyz + diffuse_color.xyz * diffuse_value * diffuse  + specular_color.xyz;
+
+					// Set the output color of our current pixel
+					gl_FragColor = vec4(color,texCol.a);
+				}*/
+
+			}
+		</script>
+
+		<script type="x-shader/x-vertex" id="vertexshader">
+			attribute float neuron_id;
+
+			uniform float fancy;
+			uniform float highlight_id;
+			uniform float size;
+			uniform float totalNeuron;
+
+			varying float vOpacity;
+
+
+			void main() {
+				if(fancy == 1.0 && highlight_id == 0.0){
+				 	if(totalNeuron<=1.0)
+			       		vOpacity = 0.5;
+			       	else vOpacity = 0.7 * pow(abs(1.0/totalNeuron),0.3);
+				 }
+				else if(highlight_id != 0.0 && neuron_id != highlight_id) vOpacity = 0.05;
+				else vOpacity = 1.0;
+
+				vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+				gl_PointSize = size * ( 300.0 / -mvPosition.z );
+				gl_Position = projectionMatrix * mvPosition;
+
+			}
+		</script>
+
+		<script type="x-shader/x-fragment" id="fragmentshader">
+			uniform vec3 color;
+			uniform float opacity;
+
+			varying float vOpacity;
+
+			void main() {
+				gl_FragColor = vec4( color , opacity * vOpacity );
+
+			}
+		</script>
+
+		<script type="x-shader/x-vertex" id="meshlinevertexshader">
+			precision mediump float;
+
+        	//attribute vec3 position;
+        	attribute vec3 previous;
+        	attribute vec3 next;
+			attribute float side;
+			attribute float width;
+			//attribute vec2 uv;
+			attribute float neuron_id;
+			attribute float group_database;
+			attribute float group_id;
+
+			//uniform mat4 projectionMatrix;
+			//uniform mat4 modelViewMatrix;
+			uniform vec2 resolution;
+			uniform float lineWidth;
+			uniform vec3 color;
+			uniform float opacity;
+			uniform float near;
+			uniform float far;
+			uniform float sizeAttenuation;
+			uniform float highlight_id;
+			uniform float highlight_group_database;
+			uniform float highlight_group_id;
+			uniform float fancy;
+			uniform float totalNeuron;
+			uniform float texture_map;
+
+			struct PointLight {
+			    vec3 position;
+				vec3 color;
+				float distance;
+				float decay;
+				int shadow;
+				float shadowBias;
+				float shadowRadius;
+				vec2 shadowMapSize;
+			};
+			uniform PointLight pointLights[NUM_POINT_LIGHTS];
+
+			varying vec2 vUV;
+			varying vec4 vColor;
+			varying vec3 vPosition;
+			varying float vOpmulti;
+			varying vec3 vertex_light_vector;
+			varying vec3 vertex_normal;
+
+			vec2 fix( vec4 i, float aspect ) {
+
+			    vec2 res = i.xy / i.w;
+			    res.x *= aspect;
+			    return res;
+
+			}
+
+			void main() {
+			    float aspect = resolution.x / resolution.y;
+				float pixelWidthRatio = 1. / (resolution.x * projectionMatrix[0][0]);
+
+			    float multi = 1.0;
+			    if(side!=1.0 && texture_map==0.0) multi = 0.8;
+
+			    if(fancy == 1.0 && highlight_id == 0.0){
+			    	if(totalNeuron<=1.0)
+			       		vOpmulti = 0.6;
+			       	else vOpmulti = 0.6 * pow(abs(1.0/totalNeuron),0.3);
+			    }
+			    else if(highlight_id != 0.0 && neuron_id != highlight_id) vOpmulti = 0.05;
+			    else if(highlight_id != 0.0) vOpmulti = 2.0;
+			    else vOpmulti = 1.0;
+
+			    if(highlight_group_database != -1.0 && group_database==highlight_group_database && group_id==highlight_group_id){
+			    	vOpmulti *= 2.0;
+			    }
+			    else if(highlight_group_database != -1.0)
+			    	vOpmulti *= 0.2;
+
+			    vColor = vec4( color * multi, opacity);
+
+			    vUV = uv;
+
+			    mat4 m = projectionMatrix * modelViewMatrix;
+			    vec4 finalPosition = m * vec4( position, 1.0 );
+			    vec4 prevPos = m * vec4( previous, 1.0 );
+			    vec4 nextPos = m * vec4( next, 1.0 );
+
+			    vec2 currentP = fix( finalPosition, aspect );
+			    vec2 prevP = fix( prevPos, aspect );
+			    vec2 nextP = fix( nextPos, aspect );
+
+			    vec4 cs_position = modelViewMatrix * vec4( position,1.);
+			    float distToCamera = 100.0 / (-cs_position.z);
+			    if(distToCamera < 0.3) distToCamera = 0.3;
+				float pixelWidth = finalPosition.w * pixelWidthRatio * distToCamera;
+			    float w = 1.8 * pixelWidth * lineWidth * width;
+
+			    if( sizeAttenuation == 1. ) {
+			        w = 1.8 * lineWidth * width;
+			    }
+
+			    vec2 dir;
+			    vec3 dir_3d;
+			    if( nextP == currentP ){
+			        dir = normalize( currentP - prevP );
+			        dir_3d = normalize (finalPosition.xyz - prevPos.xyz);
+			    }
+			    else if( prevP == currentP ){
+			     	dir = normalize( nextP - currentP );
+			     	dir_3d = normalize (nextPos.xyz - finalPosition.xyz);
+			     }
+			    else {
+			        vec2 dir1 = normalize( currentP - prevP );
+			        vec2 dir2 = normalize( nextP - currentP );
+			        dir = normalize( dir1 + dir2 );
+					dir_3d = normalize (nextPos.xyz - prevPos.xyz);
+			        vec2 perp = vec2( -dir1.y, dir1.x );
+			        vec2 miter = vec2( -dir.y, dir.x );
+			        //w = clamp( w / dot( miter, perp ), 0., 4. * lineWidth * width );
+
+			    }
+
+			    //vec2 normal = ( cross( vec3( dir, 0. ), vec3( 0., 0., 1. ) ) ).xy;
+			    vec2 normal = vec2( -dir.y, dir.x );
+			    normal.x /= aspect;
+			    normal *= .5 * w;
+
+			    vec4 offset = vec4( normal * side, 0.0, 1.0 );
+			    finalPosition.xy += offset.xy;
+
+				vPosition = ( modelViewMatrix * vec4( position, 1. ) ).xyz;
+			    gl_Position = finalPosition;
+
+				// Calculate the light position for this vertex
+				vec3 light_position = (pointLights[0].position).xyz;
+				vertex_light_vector = normalize(light_position.xyz - vPosition.xyz);
+
+				// Calculate the normal value for this vertex, in world coordinates (multiply by gl_NormalMatrix)
+				if(dir_3d.z>=0.0)
+					vertex_normal = cross(vec3(dir,dir_3d.z),normalize(vec3(normal,0.0)));
+				else
+					vertex_normal = cross(vec3(-dir,-dir_3d.z),normalize(vec3(-normal,0.0)));
+
+
+			}
+		</script>
+
+		<script type="x-shader/x-fragment" id="meshlinefragmentshader">
+			//#extension GL_OES_standard_derivatives : enable
+			precision mediump float;
+
+			uniform sampler2D map;
+			uniform float useMap;
+			uniform float useDash;
+			uniform vec2 dashArray;
+			uniform sampler2D tDepth;
+			uniform int show_point;
+			uniform sampler2D height_map;
+			uniform float texture_map;
+
+			struct PointLight {
+			    vec3 position;
+				vec3 color;
+				float distance;
+				float decay;
+				int shadow;
+				float shadowBias;
+				float shadowRadius;
+				vec2 shadowMapSize;
+			};
+			uniform PointLight pointLights[NUM_POINT_LIGHTS];
+
+			varying vec2 vUV;
+			varying vec4 vColor;
+			varying vec3 vPosition;
+			varying float vOpmulti;
+			varying vec3 vertex_light_vector;
+			varying vec3 vertex_normal;
+			const vec3 eye_position = vec3(0.0,0.0,0.0);
+
+			void main() {
+
+			    vec4 c = vColor;
+			    if( useMap == 1. ) c *= texture2D( map, vUV );
+				if( useDash == 1. ){
+
+				}
+
+			    float distance = gl_FragCoord.z;
+			    //float distance = pow(1.0 - gl_FragCoord.z, 2.0);
+			    if(show_point == 1) gl_FragColor = vec4(c[0],c[1],c[2],1./(1.+pow(pow(272.0,80.0),distance-0.995))*vOpmulti);
+			    else gl_FragColor = vec4(c[0],c[1],c[2],c[3]*vOpmulti);
+
+				if(texture_map == 1.){
+					// Extract the normal from the normal map
+					vec3 normal = normalize(texture2D(height_map, vUV).rgb * 2.0 - 1.0);
+					vec3 light_pos = normalize(pointLights[0].position);
+					// Calculate the lighting diffuse value
+					float diffuse = max(dot(normal, light_pos), 0.0);
+
+					vec3 E = normalize(vec3(eye_position - vPosition));
+					vec3 R = normalize(vec3(reflect(-light_pos, normal)));
+
+					// Defining The Material Colors
+					vec4 AmbientColor = vec4(c.xyz/6.0, 1.0);
+					vec4 DiffuseColor = vec4(c.xyz,1.0);
+					vec4 SpecularColor = vec4(c.xyz, 1.0);
+
+					// Calculate the ambient term
+					vec4 ambient_color = AmbientColor;
+
+					// Calculate the diffuse term
+					vec4 diffuse_color = DiffuseColor;
+					// Set the diffuse value (darkness). This is done with a dot product between the normal and the light
+					// and the maths behind it is explained in the maths section of the site.
+					float diffuse_value = max(dot(normalize(vertex_normal), vertex_light_vector), 0.0);
+
+					// Calculate the specular value
+					vec4 specular_color = SpecularColor * pow(max(dot(E, R), 0.0) , 64.0);
+
+					vec3 color = ambient_color.xyz + diffuse_color.xyz * diffuse_value * diffuse  + specular_color.xyz;
+
+					// Set the output color of our current pixel
+					if(show_point == 1) gl_FragColor = vec4(color,1./(1.+pow(pow(272.0,80.0),distance-0.995))*vOpmulti);
+					else gl_FragColor = vec4(color,c[3]*vOpmulti);
+
+					//gl_FragColor = vec4(diffuse_value,diffuse_value,diffuse_value,1.0);
+					//gl_FragColor = vec4(texture2D(height_map, vUV).rgb,1.0);
+					//gl_FragColor = vec4(normalize(vertex_normal),1.0);
+				}
+
+			}
+		</script>
+
+		<script src="build/three.js"></script>
+		<script src="js/three.meshline.js"></script>
+		<script src="js/tween.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+		<script src="js/controls/OrbitControls.js"></script>
+		<script src="js/loaders/OBJLoader.js"></script>
+		<script src="js/loaders/MTLLoader.js"></script>
+
+
+		<script src="js/renderers/Projector.js"></script>
+		<script src="js/renderers/CanvasRenderer.js"></script>
+
+		<script src="js/libs/stats.min.js"></script>
+		<script src="js/libs/dat.gui.min.js"></script>
+
+		<script src="node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
+
+		<script src="js/OitRenderer.js"></script>
+		<script src="js/screenShot.js"></script>
+
+		<script src="js/loadLine.js"></script>
+		<script src="js/textMark.js"></script>
+		<script src="js/highLighter.js"></script>
+		<script src="js/FileSaver.js"></script>
+	</head>
+	<body>
+		
+		<div id="container"></div>
+
+		<div id="menu">
+			<button id="btn_undo">UNDO</button>
+			<button id="btn_redo">REDO</button>
+			<button id="btn_save">SAVE</button>
+			<!--<input type='file' accept='text/plain' id="btn_load">LOAD</input>-->
+			<div class="file-box" >
+				<input type="button" class="button" id="btn_load_show" value="LOAD" >
+				<input type="file" name="file" id="btn_load" class="file">
+			</div>		
+
+			<button id="btn_print">PRINT</button>
+			<div class="upfile-box" >
+				<input type="button" class="button" id="btn_upload_show" value="UPLOAD" >
+				<input type="file" name="file" id="btn_upload" class="file">
+			</div>
+		</div>
+		<script src="js/controlPanel.js"></script>
+		<script src="js/groupMessenger.js"></script>
+		<script src="js/recorder.js"></script>
+		<script src="js/main.js"></script>
+	</body>
+</html>

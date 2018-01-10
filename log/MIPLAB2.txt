@@ -1,0 +1,50 @@
+[2017/01/18 14:51:13] MIPLAB2: Set camera position to [0.41,23.13,345.21], camera target to [21.16,-30.43,137.87]
+[2017/01/18 14:51:15] MIPLAB2: Set camera position to [20.04,-19.52,352.74], camera target to [21.16,-30.43,137.87]
+[2017/01/18 14:51:27] MIPLAB2: Set camera position to [16.33,17.51,97.56], camera target to [21.16,-30.43,137.87]
+[2017/01/18 14:51:31] MIPLAB2: Set camera position to [70.51,27.32,-160.61], camera target to [-6.78,-149.27,0.05]
+[2017/01/18 14:51:32] MIPLAB2: Set highlight to neuron "6"
+[2017/01/18 14:51:40] MIPLAB2: Set highlight to neuron "62"
+[2017/01/18 14:51:41] MIPLAB2: Highlight Closed
+[2017/01/18 14:51:42] MIPLAB2: Set highlight to neuron "282"
+[2017/01/18 14:51:43] MIPLAB2: Set highlight to neuron "251"
+[2017/01/18 14:51:44] MIPLAB2: Set highlight to neuron "23552"
+[2017/01/18 14:51:45] MIPLAB2: Set highlight to neuron "6"
+[2017/01/18 14:51:45] MIPLAB2: Set camera position to [71.16,25.79,-161.97], camera target to [-6.78,-149.27,0.05]
+[2017/01/18 14:51:46] MIPLAB2: Set highlight to neuron "71"
+[2017/01/18 14:51:47] MIPLAB2: Set highlight to neuron "62"
+[2017/01/18 14:51:48] MIPLAB2: Highlight Closed
+[2017/01/18 14:51:56] MIPLAB2: Set highlight to neuron "23552"
+[2017/01/18 14:51:58] MIPLAB2: Set highlight to neuron "6"
+[2017/01/18 14:51:58] MIPLAB2: Highlight Closed
+[2017/01/18 14:52:00] MIPLAB2: Set camera position to [94.52,72.91,-213.38], camera target to [-6.78,-149.27,0.05]
+[2017/01/18 14:53:24] MIPLAB2: Set camera position to [9.73,74.94,-233.68], camera target to [-6.78,-149.27,0.05]
+[2017/01/18 14:53:26] MIPLAB2: Set camera position to [4.17,-0.52,-155.01], camera target to [-6.78,-149.27,0.05]
+[2017/01/18 14:53:28] MIPLAB2: Set camera position to [62.42,-16.02,-154.04], camera target to [-6.78,-149.27,0.05]
+[2017/01/18 15:49:46] MIPLAB2: Set camera position to [71.95,83.99,-185.18], camera target to [-6.78,-149.27,0.05]
+[2017/01/18 15:49:48] MIPLAB2: Set highlight to neuron "71"
+[2017/01/18 15:49:50] MIPLAB2: Highlight Closed
+[2017/01/18 15:49:51] MIPLAB2: Set highlight to neuron "143"
+[2017/01/18 15:49:53] MIPLAB2: Set highlight to neuron "23552"
+[2017/01/18 15:49:53] MIPLAB2: Set highlight to neuron "251"
+[2017/01/18 15:49:54] MIPLAB2: Set highlight to neuron "282"
+[2017/01/18 15:49:55] MIPLAB2: Set highlight to neuron "6"
+[2017/01/18 15:49:56] MIPLAB2: Set highlight to neuron "71"
+[2017/01/18 15:49:56] MIPLAB2: Set highlight to neuron "62"
+[2017/01/18 15:49:57] MIPLAB2: Highlight Closed
+[2017/01/18 15:49:57] MIPLAB2: Set highlight to neuron "143"
+[2017/01/18 15:49:58] MIPLAB2: Highlight Closed
+[2017/01/18 15:50:02] MIPLAB2: Set camera position to [14.72,42.97,-199.69], camera target to [-6.78,-149.27,0.05]
+[2017/01/18 15:50:04] MIPLAB2: Set camera position to [126.25,34.07,-161.20], camera target to [-6.78,-149.27,0.05]
+[2017/01/18 15:50:09] MIPLAB2: Set highlight to neuron "6"
+[2017/01/18 15:50:09] MIPLAB2: Set highlight to neuron "282"
+[2017/01/18 15:50:09] MIPLAB2: Highlight Closed
+[2017/01/18 15:53:42] MIPLAB2: Set camera position to [34.70,22.93,-214.28], camera target to [-6.78,-149.27,0.05]
+[2017/01/18 15:53:49] MIPLAB2: Set highlight to neuron "62"
+[2017/01/18 15:53:49] MIPLAB2: Set highlight to neuron "143"
+[2017/01/18 15:53:50] MIPLAB2: Set highlight to neuron "71"
+[2017/01/18 15:53:50] MIPLAB2: Set highlight to neuron "6"
+[2017/01/18 15:53:51] MIPLAB2: Set highlight to neuron "23552"
+[2017/01/18 15:53:52] MIPLAB2: Set highlight to neuron "282"
+[2017/01/18 15:53:52] MIPLAB2: Set highlight to neuron "251"
+[2017/01/18 15:53:53] MIPLAB2: Highlight Closed
+[2017/01/18 15:53:59] MIPLAB2: Set camera position to [41.37,74.95,-229.26], camera target to [-6.78,-149.27,0.05]

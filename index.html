@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<title>27000 Drosophila brain demo</title>
+		<style>
+			html, body {
+				height: 100%;
+			}
+
+			body {
+				background-color: #000000;
+				margin: 0;
+				font-family: Arial;
+				overflow: hidden;
+			}
+
+			a {
+				color: #ffffff;
+			}
+
+			#menu {
+				position: absolute;
+				bottom: 20px;
+				left: 20px;
+				width: 100%;
+				text-align: left;
+
+			}
+
+			button {
+				color: rgba(0,255,255,0.75);
+				background: transparent;
+				outline: 1px solid rgba(0,255,255,0.75);
+				border: 0px;
+				padding: 5px 10px;
+				cursor: pointer;
+			}
+			button:hover,input.button:hover {
+				background-color: rgba(0,255,255,0.5);
+			}
+			button:active,input.button:active {
+				color: #000000;
+				background-color: rgba(0,255,255,0.75);
+			}
+
+			div.file-box{
+				position:relative;
+				width: 35px;
+				height: 100%;
+				border: 0px;
+				padding: 5px 10px;
+				display:inline-block;
+				cursor: pointer;
+			}
+
+			input.button{
+				position:absolute;
+				top:-7px;
+				left:0px;
+				border: 0px;
+				width:100%;
+				height: 25px;
+				color: rgba(0,255,255,0.75);
+				background: transparent;
+				outline: 1px solid rgba(0,255,255,0.75);
+				cursor: pointer;
+			}
+
+			input.file{
+				position:absolute;
+				top:-7px;
+				left:0px;
+				height: 25px;
+				border: 0px;
+				filter:alpha(opacity:0);
+				opacity:0;
+				width:100%;
+				cursor: pointer;
+			}
+		</style>
+
+		<script type="x-shader/x-vertex" id="somavertexshader">
+			attribute float neuron_id;
+
+			uniform float highlight_id;
+			uniform float size;
+			varying float vOpacity;
+
+			void main() {
+
+				if(highlight_id != 0.0 && neuron_id != highlight_id) vOpacity = 0.1;
+				else vOpacity = 1.0;
+
+				vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+				gl_PointSize = size * ( 300.0 / -mvPosition.z );
+				gl_Position = projectionMatrix * mvPosition;
+
+			}
+		</script>
+
+		<script type="x-shader/x-fragment" id="somafragmentshader">
+			uniform vec3 color;
+			uniform sampler2D texture;
+			uniform float opacity;
+
+			varying float vOpacity;
+			void main() {
+
+				gl_FragColor = vec4( color , opacity * vOpacity );
+
+				vec4 texCol = texture2D( texture, gl_PointCoord );
+				if(texCol.a <= 0.5) discard;
+				else gl_FragColor = gl_FragColor * texCol.a;
+			}
+		</script>
+
+		<script type="x-shader/x-vertex" id="vertexshader">
+			attribute float neuron_id;
+
+			uniform float highlight_id;
+			uniform float size;
+
+			varying float vOpacity;
+
+			void main() {
+
+				if(highlight_id != 0.0 && neuron_id != highlight_id) vOpacity = 0.05;
+				else vOpacity = 1.0;
+
+				vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+				gl_PointSize = size * ( 300.0 / -mvPosition.z );
+				gl_Position = projectionMatrix * mvPosition;
+
+			}
+		</script>
+
+		<script type="x-shader/x-fragment" id="fragmentshader">
+			uniform vec3 color;
+			uniform float opacity;
+
+			varying float vOpacity;
+
+			void main() {
+				gl_FragColor = vec4( color , opacity * vOpacity );
+
+			}
+		</script>
+
+		<script src="build/three.js"></script>
+		<script src="js/three.meshline.js"></script>
+		<script src="js/tween.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+		<script src="js/controls/OrbitControls.js"></script>
+		<script src="js/loaders/OBJLoader.js"></script>
+		<script src="js/loaders/MTLLoader.js"></script>
+
+
+		<script src="js/renderers/Projector.js"></script>
+		<script src="js/renderers/CanvasRenderer.js"></script>
+
+		<script src="js/libs/stats.min.js"></script>
+		<script src="js/libs/dat.gui.min.js"></script>
+
+		<script src="node_modules/socket.io/node_modules/socket.io-client/socket.io.js"></script>
+
+		<script src="js/OitRenderer.js"></script>
+		<script src="js/screenShot.js"></script>
+
+		<script src="js/loadLine.js"></script>
+		<script src="js/highLighter.js"></script>
+		<script src="js/FileSaver.js"></script>
+	</head>
+	<body>
+		<div id="container"></div>
+
+		<div id="menu">
+			<button id="btn_undo">UNDO</button>
+			<button id="btn_redo">REDO</button>
+			<button id="btn_save">SAVE</button>
+			<!--<input type='file' accept='text/plain' id="btn_load">LOAD</input>-->
+			<div class="file-box" >
+				<!--2. 顯示上傳按鍵-->
+				<input type="button" class="button" id="btn_load_show" value="LOAD" >
+				<!--3. 上傳按鍵(隱藏)-->
+				<input type="file" name="file" id="btn_load" class="file">
+			</div>
+
+			<button id="btn_print">PRINT</button>
+		</div>
+		<script src="js/controlPanel.js"></script>
+		<script src="js/recorder.js"></script>
+		<script src="js/main.js"></script>
+
+	</body>
+</html>
