@@ -11,7 +11,7 @@
 7. 輸入下列指令以將資料載入資料庫
 >./mongoimport --db neural --collection DATA --file [WebstormProjectTest 的路徑]/WebstormProjectTest/public/sets/linesetLiWarpTransformRelease.json
 >./mongoimport --db neural --collection DATA_group --file  [WebstormProjectTest 的路徑]/WebstormProjectTest/public/sets/Tracts0724_new.json
-8. cd 進WebstormProjectTest資料夾中
+8. cd進從git下載並解壓的FlyBrainSimulator-master資料夾中
 9. 輸入以下指令以開啟網頁server
    > node http_server.js
 10. 當terminal中顯示”HTTP伺服器在 http://127.0.0.1:1339/ 上運行” 即代表伺服器開啟成功，可以開啟瀏覽器進行網頁測試。
@@ -29,7 +29,7 @@
 7. 輸入下列指令以將資料載入資料庫
 >mongoimport --db neural --collection DATA --file [剛剛解壓完資料庫的資料夾]/linesetLiWarpTransformRelease.json
 >mongoimport --db neural --collection DATA_group --file  [剛剛解壓完資料庫的資料夾]/Tracts0724_new.json
-8. cd 進WebstormProjectTest資料夾中
+8. cd進從git下載並解壓的FlyBrainSimulator-master資料夾中
 9. 輸入以下指令以開啟網頁server
    > node http_server.js
 10. 當terminal中顯示”HTTP伺服器在 http://127.0.0.1:1339/ 上運行” 即代表伺服器開啟成功，可以開啟瀏覽器進行網頁測試。
