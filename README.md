@@ -1,7 +1,7 @@
 # 猴子都會的安裝方法
 #For MacOS
 1.	下載並安裝node.js 8.11.3 LTS版: https://nodejs.org/en/
-2.	下載並安裝mongodb 4.0版: https://www.mongodb.com/download-center?filter=enterprise?jmp=nav#enterprise
+2.	下載並安裝mongodb 4.0版: https://www.mongodb.com/download-center?jmp=nav#community
 3.	下載資料庫: https://drive.google.com/file/d/0B6bh1oxCO9ecS1hJQ2lLTVJaQms/view
 4.	開啟terminal並且cd進mongodb的資料夾mongodb-osx-x86_64-enterprise-4.0.0/bin 中
 5.	輸入下列指令以開啟資料庫服務
@@ -19,7 +19,7 @@
 
 #For Windows
 1.	下載並安裝node.js 8.11.3 LTS版: https://nodejs.org/en/
-2.	下載並安裝mongodb 4.0版: https://www.mongodb.com/download-center?filter=enterprise?jmp=nav#enterprise
+2.	下載並安裝mongodb 4.0版: https://www.mongodb.com/download-center?jmp=nav#community
 3.	開啟cmd並且cd進mongodb的資料夾C:\Program Files\MongoDB\Server\4.0\bin 中
 4.	輸入下列指令以開啟資料庫服務
 >md C:\\data\db
