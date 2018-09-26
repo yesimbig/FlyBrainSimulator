@@ -1,6 +1,5 @@
 # 猴子都會的安裝方法
-For MacOS
----------
+## For MacOS
 1.	下載並安裝node.js 8.11.3 LTS版: https://nodejs.org/en/
 2.	下載並安裝mongodb 4.0版: https://www.mongodb.com/download-center?jmp=nav#community
 3.	下載資料庫: https://drive.google.com/file/d/0B6bh1oxCO9ecS1hJQ2lLTVJaQms/view
@@ -24,8 +23,8 @@ node http_server.js
 10. 當terminal中顯示”HTTP伺服器在 http://127.0.0.1:1339/ 上運行” 即代表伺服器開啟成功，可以開啟瀏覽器進行網頁測試。
 
 <p>
-For Windows
------------
+
+## For Windows
 1.	下載並安裝node.js 8.11.3 LTS版: https://nodejs.org/en/
 2.	下載並安裝mongodb 4.0版: https://www.mongodb.com/download-center?jmp=nav#community
 3.	開啟cmd並且cd進mongodb的資料夾C:\Program Files\MongoDB\Server\4.0\bin 中
