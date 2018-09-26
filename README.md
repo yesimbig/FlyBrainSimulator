@@ -10,6 +10,7 @@
 6. 再開啟一個terminal並且cd進mongodb-osx-x86_64-enterprise-4.0.0/bin 中
 7. 輸入下列指令以將資料載入資料庫
 >./mongoimport --db neural --collection DATA --file [WebstormProjectTest 的路徑]/WebstormProjectTest/public/sets/linesetLiWarpTransformRelease.json
+
 >./mongoimport --db neural --collection DATA_group --file  [WebstormProjectTest 的路徑]/WebstormProjectTest/public/sets/Tracts0724_new.json
 8. cd進從git下載並解壓的FlyBrainSimulator-master資料夾中
 9. 輸入以下指令以開啟網頁server
