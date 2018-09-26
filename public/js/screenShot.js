@@ -55,7 +55,7 @@ var THREEx	= THREEx 		|| {};
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             var scaled	= cpuScaleAspect(canvas.width, canvas.height, image.width, image.height);
-            console.log(scaled);
+            
 
             var offsetX	= (canvas.width  - scaled.width )/2;
             var offsetY	= (canvas.height - scaled.height)/2;
@@ -63,7 +63,7 @@ var THREEx	= THREEx 		|| {};
 
             var mimetype	= "image/png";
             var newDataUrl	= canvas.toDataURL(mimetype);
-
+            console.log(newDataUrl);
             callback && callback(newDataUrl)
         }.bind(this);
 
@@ -81,7 +81,9 @@ var THREEx	= THREEx 		|| {};
         opts.width	= opts.width	|| 1920;
         opts.height	= opts.height	|| 1080;
         opts.callback	= opts.callback	|| function(url){
-                window.open(url);
+        	 var w = window.open("",'_blank');
+    		w.document.write('<img src="'+url+'"/>');
+    		w.document.close(); 
             };
 
         var dataUrl	= this.toDataURL(renderer);
