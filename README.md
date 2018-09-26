@@ -22,8 +22,8 @@
 2.	下載並安裝mongodb 4.0版: https://www.mongodb.com/download-center?jmp=nav#community
 3.	開啟cmd並且cd進mongodb的資料夾C:\Program Files\MongoDB\Server\4.0\bin 中
 4.	輸入下列指令以開啟資料庫服務
->md C:\\data\db
->mongod –bind_ip localhost
+> md C:\\data\db
+> mongod –bind_ip localhost
 5.	下載並解壓縮資料庫: https://drive.google.com/file/d/0B6bh1oxCO9ecS1hJQ2lLTVJaQms/view 
 6. 再開啟一個cmd並且cd進C:\Program Files\MongoDB\Server\4.0\bin 中
 7. 輸入下列指令以將資料載入資料庫
