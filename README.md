@@ -1,8 +1,11 @@
 # 猴子都會的安裝方法
+## 2019-12-19更新資料庫json 格式
+將 key 加上 "", 並且單引號' 換成 "
+
 ## For MacOS
 1.	下載並安裝node.js 8.11.3 LTS版: https://nodejs.org/en/
 2.	下載並安裝mongodb 4.0版: https://www.mongodb.com/download-center?jmp=nav#community
-3.	下載資料庫: https://drive.google.com/file/d/0B6bh1oxCO9ecS1hJQ2lLTVJaQms/view
+3.	下載資料庫: https://drive.google.com/file/d/1_LYOMJ35xm0PKiBFlr6X-G_dezmGxdHa/view?usp=sharing
 4.	開啟terminal並且cd進mongodb的資料夾mongodb-osx-x86_64-enterprise-4.0.0/bin 中
 5.	輸入下列指令以開啟資料庫服務
 ```
@@ -33,7 +36,7 @@
     md C:\\data\db
     mongod –bind_ip localhost
 ```
-5.	下載並解壓縮資料庫: https://drive.google.com/file/d/0B6bh1oxCO9ecS1hJQ2lLTVJaQms/view 
+5. 下載並解壓縮資料庫: https://drive.google.com/file/d/1_LYOMJ35xm0PKiBFlr6X-G_dezmGxdHa/view?usp=sharing
 6. 再開啟一個cmd並且cd進C:\Program Files\MongoDB\Server\4.0\bin 中
 7. 輸入下列指令以將資料載入資料庫
 ```
