@@ -204,10 +204,6 @@ module.exports = function(server, configDB){
 								doc2.links[j] += old_vertices.length/3;
 							}
 
-							console.log(doc2)
-
-							console.log(doc.tips)
-
 							//bug:1125
 							dataset = {
 									 database: database,
@@ -224,9 +220,6 @@ module.exports = function(server, configDB){
 									 color: colors[color%colors.length]
 							};
 						} else{
-							console.log('soma', dataset['soma'])
-							console.log('tips', dataset['tips'])
-
 							socket.emit('group',{database: database,gid:doc.id , id: dataset.id});
 							socket.emit('message',dataset);
 							//console.log(dataset.vertices.length);
