@@ -1,10 +1,28 @@
+function generate_tips(neuron){
+	// HOT FIX: new database has no tips, use this function to generate it.
+	var tips = Array(neuron.vertices.length / 3).fill(0);
+	var vertices_count = Array(neuron.vertices.length / 3).fill(0);
+
+	for(var i=0; i<neuron.links.length; i++){
+		vertices_count[neuron.links[i]]++;
+	}
+
+	for(var i=0; i<tips.length; i++){
+		if(vertices_count[i] == 1)
+			tips[i] = 1;
+	}
+
+	return tips;
+}
+
 module.exports = function(server, configDB){
-	var io = require('socket.io').listen(server); // ¥[¤J Socket.IO
+	var io = require('socket.io').listen(server); // ï¿½[ï¿½J Socket.IO
 	var fs = require('fs');
 	var assert = require('assert');
 	var accept = {};//store which group could be shown
 	var activeTransportSocket = {};
-	
+
+
 	
 	io.on('connection', function(socket){
 		console.log('a user connected');
@@ -123,7 +141,7 @@ module.exports = function(server, configDB){
 			  var dataset = {id: doc.id,
 							 vertices: doc.vertices,
 							 links: doc.links,
-							 tips: doc.tips,
+							 tips: generate_tips(doc),
 							 color: color,
 							 soma: ['0']
 							};
@@ -151,7 +169,7 @@ module.exports = function(server, configDB){
 				var findset = []; // every 10 neurons could be a findset
 				for(var i = 0;i < doc.groups.length; i++){		 
 					findset.push({ "id": parseInt(doc.groups[i])+1 });
-					if(i!= 0 && i % 50 == 0){//50¬°¤@²Õ
+					if(i!= 0 && i % 50 == 0){//50ï¿½ï¿½ï¿½@ï¿½ï¿½
 						wholeFindset.push(findset);
 						findset = [];
 					}
@@ -185,6 +203,7 @@ module.exports = function(server, configDB){
 							for(var j = 0;j< doc2.links.length;j++){
 								doc2.links[j] += old_vertices.length/3;
 							}
+
 							//bug:1125
 							dataset = {
 									 database: database,
@@ -195,7 +214,7 @@ module.exports = function(server, configDB){
 									 vertices: old_vertices.concat(doc2.vertices),
 									 links: old_links.concat(doc2.links),
 									 neuron: old_neuron.concat(doc2.id),
-									 tips: old_tips.concat(doc2.tips),
+									 tips: old_tips.concat(generate_tips(doc2)),
 									 soma: old_soma.concat(old_vertices.length/3),
 									 neuron_name: old_neuron_name.concat(doc.neuron),
 									 color: colors[color%colors.length]
